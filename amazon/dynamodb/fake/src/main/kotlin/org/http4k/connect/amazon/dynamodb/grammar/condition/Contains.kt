@@ -1,6 +1,7 @@
 package org.http4k.connect.amazon.dynamodb.grammar.condition
 
 import org.http4k.connect.amazon.dynamodb.grammar.Expr
+import org.http4k.connect.amazon.dynamodb.grammar.ExprFactory
 import parser4k.Parser
 import parser4k.commonparsers.token
 import parser4k.inOrder
@@ -8,7 +9,7 @@ import parser4k.map
 import parser4k.ref
 import parser4k.skipWrapper
 
-object Contains : (() -> Parser<Expr>) -> Parser<Expr> {
+object Contains : ExprFactory {
     override operator fun invoke(parser: () -> Parser<Expr>): Parser<Expr> =
         inOrder(token("contains"), token("("), ref(parser), token(","), ref(parser), token(")"))
             .skipWrapper()
