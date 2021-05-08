@@ -12,7 +12,8 @@ object ExpressionAttributeName : ExprFactory {
     override operator fun invoke(parser: () -> Parser<Expr>): Parser<Expr> = inOrder(oneOf('#'), Tokens.identifier)
         .skipFirst().map { value ->
             Expr { item ->
-                (item.names["#$value"] ?: error("missing name $value")).value.parseWith(parser()).eval(item)
+                println(value)
+                (item.names["#$value"] ?: error("missing name #$value")).value.parseWith(parser()).eval(item)
             }
         }
 }

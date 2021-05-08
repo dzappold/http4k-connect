@@ -4,6 +4,7 @@ import org.http4k.connect.amazon.AmazonJsonFake
 import org.http4k.connect.amazon.dynamodb.DynamoTable
 import org.http4k.connect.amazon.dynamodb.action.BatchGetItem
 import org.http4k.connect.amazon.dynamodb.action.BatchGetItems
+import org.http4k.connect.amazon.dynamodb.grammar.projection.project
 import org.http4k.connect.storage.Storage
 
 fun AmazonJsonFake.batchGetItem(tables: Storage<DynamoTable>) = route<BatchGetItem> {
