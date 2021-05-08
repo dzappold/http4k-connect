@@ -17,7 +17,7 @@ class UpdateRemoveGrammarTest {
     @Test
     fun `remove value`() {
         assertThat(
-            UpdateRemoveGrammar.parse("#attr").eval(
+            UpdateRemoveGrammar.parse("REMOVE #attr").eval(
                 ItemWithSubstitutions(
                     Item(
                         attr1 of "222",
@@ -29,6 +29,27 @@ class UpdateRemoveGrammarTest {
             equalTo(
                 Item(
                     attrNum of 456
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `remove indexed value`() {
+        assertThat(
+            UpdateRemoveGrammar.parse("REMOVE #attr[1]").eval(
+                ItemWithSubstitutions(
+                    Item(
+                        attr1 of "222",
+                        attrList of listOf(attr1.asValue("333"), attr1.asValue("444"))
+                    ),
+                    mapOf("#attr" to attrList.name)
+                )
+            ),
+            equalTo(
+                Item(
+                    attr1 of "222",
+                    attrList of listOf(attr1.asValue("444"))
                 )
             )
         )

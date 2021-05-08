@@ -1,7 +1,6 @@
 package org.http4k.connect.amazon.dynamodb.grammar.update
 
 import org.http4k.connect.amazon.dynamodb.grammar.Expr
-import org.http4k.connect.amazon.dynamodb.grammar.ExpressionAttributeName
 import parser4k.OutputCache
 import parser4k.Parser
 import parser4k.oneOf
@@ -20,8 +19,8 @@ object UpdateDeleteGrammar {
         oneOfWithPrecedence(
             UpdateList(::expr).with(cache),
             oneOf(
-                ExpressionAttributeName(::expr).with(cache),
-                RemoveAttribute(::expr).with(cache)
+                UpdateExpressionAttributeName(::expr).with(cache),
+                RemoveAttributeValue(::expr).with(cache)
             )
         ).reset(cache)
 }

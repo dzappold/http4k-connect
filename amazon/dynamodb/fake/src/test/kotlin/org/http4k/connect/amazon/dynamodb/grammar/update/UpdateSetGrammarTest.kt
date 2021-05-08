@@ -17,21 +17,14 @@ class UpdateSetGrammarTest {
     @Test
     fun `set value`() {
         assertThat(
-            UpdateSetGrammar.parse("#attr").eval(
+            UpdateSetGrammar.parse("#attr = :value").eval(
                 ItemWithSubstitutions(
-                    Item(
-                        attr1 of "222",
-                        attrNum of 456
-                    ),
-                    mapOf("#attr" to attr1.name)
+                    Item(attr1 of "222", attrNum of 456),
+                    mapOf("#attr" to attr1.name),
+                    mapOf(":value" to attr1.asValue("333"))
                 )
             ),
-            equalTo(
-                Item(
-                    attr1 of "333",
-                    attrNum of 456
-                )
-            )
+            equalTo(Item(attr1 of "333", attrNum of 456))
         )
     }
 }

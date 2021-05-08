@@ -11,6 +11,7 @@ object SetValue : ExprFactory {
     override operator fun invoke(parser: () -> Parser<Expr>): Parser<Expr> =
         binaryExpr(ref(parser), "=") { left, right ->
             Expr {
+                println(left)
                 it.item + (left.eval(it) as AttributeName to right.eval(it))
             }
         }

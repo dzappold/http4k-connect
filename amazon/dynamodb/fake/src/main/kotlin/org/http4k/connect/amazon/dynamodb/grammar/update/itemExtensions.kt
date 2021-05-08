@@ -18,9 +18,18 @@ fun Item.update(
         else -> updateExpression.split("SET", "REMOVE", "DELETE", "ADD")
             .map(String::trim)
             .filter(String::isNotEmpty)
+            .flatMap {
+                when {
+                    updateExpression.contains("SET $it") -> it.split(",").map { "SET $it" }
+                    updateExpression.contains("REMOVE $it") -> it.split(",").map { "REMOVE $it" }
+                    updateExpression.contains("DELETE $it") -> it.split(",").map { "DELETE $it" }
+                    updateExpression.contains("ADD $it") -> it.split(",").map { "ADD $it" }
+                    else -> error("illegal update! $updateExpression")
+                }
+            }
             .fold(this) { acc, next ->
                 when {
-                    updateExpression.contains("SET $next") ->
+                    next.startsWith("SET") ->
                         UpdateSetGrammar.parse(next).eval(
                             ItemWithSubstitutions(
                                 acc,
@@ -28,7 +37,7 @@ fun Item.update(
                                 expressionAttributeValues ?: emptyMap()
                             )
                         )
-                    updateExpression.contains("REMOVE $next") ->
+                    next.startsWith("REMOVE") ->
                         UpdateRemoveGrammar.parse(next).eval(
                             ItemWithSubstitutions(
                                 acc,
@@ -36,7 +45,7 @@ fun Item.update(
                                 expressionAttributeValues ?: emptyMap()
                             )
                         )
-                    updateExpression.contains("DELETE $next") ->
+                    next.startsWith("DELETE") ->
                         UpdateRemoveGrammar.parse(next).eval(
                             ItemWithSubstitutions(
                                 acc,
@@ -44,7 +53,7 @@ fun Item.update(
                                 expressionAttributeValues ?: emptyMap()
                             )
                         )
-                    updateExpression.contains("ADD $next") ->
+                    next.startsWith("ADD") ->
                         UpdateRemoveGrammar.parse(next).eval(
                             ItemWithSubstitutions(
                                 acc,

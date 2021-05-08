@@ -63,9 +63,12 @@ class HelpersKtTest {
     @Test
     fun `update an item`() {
         item.update(
-            "SET #attr = :strValue, attrNum = :numValue REMOVE c, d ADD e, f DELETE g, h",
+            "SET #string = :strValue, attrNum = :numValue REMOVE c, d ADD e, f DELETE g, h",
             mapOf("#string" to AttributeName.of("attrStr")),
-            mapOf(":value" to attrStr.asValue("notHello"))
+            mapOf(
+                ":strValue" to attrStr.asValue("notHello"),
+                ":numValue" to attrNum.asValue(123),
+            )
         )
     }
 }
