@@ -14,11 +14,9 @@ import kotlinx.metadata.KmClassifier
 import org.http4k.connect.Http4kConnectAction
 import org.http4k.connect.Http4kConnectAdapter
 import org.http4k.connect.PagedAction
-import org.http4k.connect.plugin.Http4kConnectProcessor.Companion.KAPT_KOTLIN_GENERATED_OPTION_NAME
 import java.io.File
 import javax.annotation.processing.RoundEnvironment
 import javax.annotation.processing.SupportedAnnotationTypes
-import javax.annotation.processing.SupportedOptions
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion.RELEASE_8
 import javax.lang.model.element.TypeElement
@@ -26,10 +24,10 @@ import javax.lang.model.element.TypeElement
 @KotlinPoetMetadataPreview
 @SupportedSourceVersion(RELEASE_8)
 @SupportedAnnotationTypes("org.http4k.connect.Http4kConnectAdapter")
-@SupportedOptions(KAPT_KOTLIN_GENERATED_OPTION_NAME)
 class Http4kConnectAdapterProcessor : Http4kConnectProcessor() {
 
     override fun generate(annotations: Set<TypeElement>, roundEnv: RoundEnvironment, outputDir: File): Boolean {
+        File("./foo.txt").writeText("CONNECT_WORKING")
         roundEnv.annotated<Http4kConnectAdapter>()
             .map { it.toImmutableKmClass() }
             .map { it.generateActionExtensionsFor(roundEnv) }

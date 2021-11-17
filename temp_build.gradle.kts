@@ -11,7 +11,7 @@ plugins {
     signing
     publishing
     `maven-publish`
-    kotlin("kapt") version "1.6.0"
+    id("com.google.devtools.ksp") version "1.5.31-1.0.1"
 }
 
 buildscript {
@@ -31,7 +31,7 @@ apply(plugin = "io.codearte.nexus-staging")
 allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
-    apply(plugin = "kotlin-kapt")
+    apply(plugin = "com.google.devtools.ksp" )
 //    apply(plugin = "org.jetbrains.dokka")
 //    apply(plugin = "com.github.kt3k.coveralls")
 
@@ -134,9 +134,9 @@ allprojects {
         } else if (project.name == "http4k-connect-kapt-generator") {
             api(project(":http4k-connect-core"))
         } else if (project.name != "http4k-connect-core") {
+            ksp(project(":http4k-connect-kapt-generator"))
             api("org.http4k:http4k-cloudnative")
             api(project(":http4k-connect-core"))
-            kapt(project(path =":http4k-connect-kapt-generator"))
             testImplementation(project(path = ":http4k-connect-core-fake", configuration = "testArtifacts"))
         }
     }

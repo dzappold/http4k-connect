@@ -22,14 +22,17 @@ abstract class Http4kConnectProcessor : AbstractProcessor() {
 
     abstract fun generate(annotations: Set<TypeElement>, roundEnv: RoundEnvironment, outputDir: File): Boolean
 
-    override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment) = outputDir()
-        ?.let { generate(annotations, roundEnv, File(it)) }
-        ?: run {
-            processingEnv.messager.printMessage(ERROR, "Can't find the target directory for generated Kotlin files.")
-            false
-        }
+    override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
+        File("./bar.txt").writeText("CONNECT_WORKING")
+        return outputDir()
+            ?.let { generate(annotations, roundEnv, File(it)) }
+            ?: run {
+                processingEnv.messager.printMessage(ERROR, "Can't find the target directory for generated Kotlin files.")
+                false
+            }
+    }
 
-    private fun outputDir() = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
+    private fun outputDir() : String? = "./foo/bar/".also { File(it).mkdirs() }
 
     protected fun rawType(typeMirror: TypeMirror) =
         processingEnv.typeUtils.erasure(typeMirror).toString()
@@ -37,9 +40,6 @@ abstract class Http4kConnectProcessor : AbstractProcessor() {
     protected fun superTypesOf(type: TypeMirror): List<TypeMirror> =
         processingEnv.typeUtils.directSupertypes(type).flatMap { superTypesOf(it) + it }
 
-    companion object {
-        const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-    }
 }
 
 @KotlinPoetMetadataPreview
